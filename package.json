@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "better-scroll": "^1.11.1",
     "ly-tab": "^1.0.3",
     "vue": "^2.5.2",
     "vue-resource": "^1.5.0",

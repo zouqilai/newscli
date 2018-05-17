@@ -1,24 +1,26 @@
 <template>
   <section id="app">
-    <div class="op-wx-swiper" v-if="!isShowDetai">
-      <div class="op-wx-swiper-box">
-        <!-- <router-link class="op-wx-swiper-item" :to="{path:'/remen',query:{urlName:'remen'}}">热门</router-link> -->
-        <router-link class="op-wx-swiper-item" to="/remen">热门</router-link>
-        <router-link class="op-wx-swiper-item" to="/jiatingjiaoyu">家庭教育</router-link>
-        <router-link class="op-wx-swiper-item" to="/xuexifangfa">学习方法</router-link>
-        <router-link class="op-wx-swiper-item" to="/xuexijiqiao">学习技巧</router-link>
-        <router-link class="op-wx-swiper-item" to="/xuexixiguan">学习习惯</router-link>
-        <router-link class="op-wx-swiper-item" to="/xuexijiqiao">学习技巧</router-link>
-        <router-link class="op-wx-swiper-item" to="/xuexixiguan">学习习惯</router-link>
-        
+    <div class="op-wx-swiper" v-show="isShowDetai" ref="tabWrapper">
+      <div class="op-wx-swiper-box" ref="tabContent">
+        <ul>
+          <li ref="tabitem0"><router-link to="/remen">热门</router-link></li>
+          <li ref="tabitem1"><router-link to="/jiatingjiaoyu">家庭教育</router-link></li>
+          <li ref="tabitem2"><router-link to="/xuexifangfa">学习方法</router-link></li>
+          <li ref="tabitem3"><router-link to="/xuexijiqiao">学习技巧</router-link></li>
+          <li ref="tabitem4"><router-link to="/xuexixiguan">学习习惯</router-link></li>
+          <li ref="tabitem5"><router-link to="/xuexijiqiao">学习技巧</router-link></li>
+          <li ref="tabitem6"><router-link to="/xuexixiguan">学习习惯</router-link></li>
+        </ul>
       </div>
+      <div class="border-1px"></div>
     </div>
-    <div class="border-1px" v-if="!isShowDetai"></div>
-    <router-view :m="isShowDetai" @showDetai="fn"/>
+    <router-view :isShowDetai="isShowDetai" @showDetai="fn"/>
+
   </section>
 </template>
 
 <script>
+import BScroll from 'better-scroll';
 export default {
   data(){
     return {
@@ -26,15 +28,55 @@ export default {
       isShowDetai:false
     }
   },
-  created() {
-    
+  // created() {
+  //   this.$nextTick(() => {
+  //     //this.isShowDetai=true;
+  //     //this._initScroll();
+  //   });
+  // },
+  mounted(){
+    this.isShowDetai=true;
+    this.$nextTick(() => {
+      //this.isShowDetai=true;
+      this._initScroll();
+    });
   },
   methods:{
       fn(data){
           //父亲接收儿子的数据函数
           return this.isShowDetai=data;
+      },
+      _initScroll() {
+        let width=0;
+        
+        //tab的长度，后期取完数据，可以用.length来计算
+        for (let  i = 0; i <7; i++) {
+            width+=this.$refs['tabitem'+i].getBoundingClientRect().width
+        }
+        this.$refs.tabContent.style.width=width+'px';
+
+        this.meunScroll = new BScroll(this.$refs.tabWrapper, {
+            scrollX:true,
+            scrollY:false,
+            eventPassthrough:'vertical'
+        });
+      },
+      isShowDetaiFunction(){
+        if(this.$route.name == 'detail'){
+          this.isShowDetai=false;
+        }else{
+          this.isShowDetai=true;//解决回退没有tab
+        }
       }
+  },
+  components: {
+      
+  },
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    "$route": "isShowDetaiFunction"
   }
+
 }
 </script>
 
@@ -44,9 +86,10 @@ export default {
   width: 100%
 .op-wx-swiper-box
   display:flex
-  width:25rem
-  padding: 0.1rem 0.15rem;
-  .op-wx-swiper-item
-    padding:0 0.08rem
-    font-size:.25rem
+  -width:25rem
+  -padding: 0 0.15rem;
+  li
+    padding:.22rem .1rem
+    font-size:.3rem
+    float:left
 </style>

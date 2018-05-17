@@ -2,7 +2,7 @@
 	<div class="template">
         <div class="loader" v-load-more="loaderMore">
     		<div v-for="(item,key) in redian.data" class="op-wx-new-item">
-    			<a v-if="item.imgnum" v-bind:href="'detail/'+redian.fid+'/'+item.id" class="op-wx-new-title border-1px"><h3>{{item.title}}</h3>
+    			<a v-if="item.imgnum" v-on:click="toLink(item.id)" class="op-wx-new-title border-1px"><h3>{{item.title}}</h3>
     				<aside class="op-wx-new-img">
     					<figure>
     						<img :src="item.img" :alt="item.title" />
@@ -40,8 +40,8 @@ export default {
             redian: {
                 type:Array
             },
-            urlName: {
-                type:String
+            urlName:{
+                type: String
             },
             offset: 0, 
             preventRepeat: false,  //防止重复获取
@@ -49,6 +49,11 @@ export default {
         };
     },
     mixins: [loadMore],
+    // props:{
+    //     urlName:{
+    //         type: String
+    //     }
+    // },
     watch:{
         urlName:function(old,newv){
             this.urlName = old;
@@ -116,10 +121,17 @@ export default {
             //this.hideLoading();
             
             this.preventRepeat = false;
+        },
+        toLink(id){
+            //'detail/'+redian.fid+'/'+item.id
+            console.log(232);
+            this.$router.push({name:'detail',params:{fid:this.redian.fid,id:id}});
         }
     },
     created() {
-        
+        //this.$emit('showDetai',true);//向父级传递数据
+        // console.log(4,this.urlName);
+        // this.getAjax(this.urlName);
     }
 }
 </script>
@@ -128,7 +140,7 @@ export default {
 .op-wx-new-item
     margin:.1rem .1rem
 .op-wx-new-title
-    font-size:.24rem
+    font-size:.3rem
     text-align: left
     line-height: 0.36rem
     padding-bottom: 0.15rem
@@ -141,7 +153,7 @@ export default {
             img
                 width:100%
     .op-wx-new-q
-        font-size:.1rem
+        font-size:.2rem
         color:#888
         line-height: 1
     .op-wx-new-lfimg

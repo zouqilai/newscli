@@ -23,6 +23,7 @@ const appData = require('../data.json')
 
 const remen = appData.remen;
 const jiatingjiaoyu = appData.jiatingjiaoyu;
+const detail = appData.detail;
 
 
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -45,6 +46,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         res.json({
           errno: 0,
           data: jiatingjiaoyu
+        })
+      }),
+      app.get('/api/detail', (req, res) => {
+        res.json({
+          errno: 0,
+          data: detail
         })
       })
     },

@@ -25,7 +25,9 @@ npm run dev 启动项目（先把config/index.js里的host改为loacalhost或你
 ```
 
 #### 遇到的问题
+1、获取路游的路径名称
 <pre>
+1> 写在remen.vue
 export default {
   data() {
         return {
@@ -47,8 +49,10 @@ export default {
 //改为wach监听，然后发起异步请求
 //beforeRouteLeave使用时，必须使用next()
 //beforeRouteEnter不能使用this，可以在next里使用vm实例
+
+2> 路游监听
 </pre>
-子向父亲传值
+2、子向父亲传值
 <pre>
 //子
 created(){
@@ -63,3 +67,37 @@ methods:{
    }
 }
 </pre>
+3、新闻列表跳详细页面，有tab的几秒闪动
+<pre>
+//App.vue有个布尔形式的值isShowDetai=false，在除detail的路游中进来修改isShowDetai=true，使其tab显示出来,在进入detail页面时修改isShowDetai=false值在传回App.vue，使其tab隐藏(利用路游监听，路游没改变不能监听改变)
+mounted(){
+	this.isShowDetai=true;
+	//页面上来tab是隐藏的，需要在显示后重新更新dom，所以选择mounted
+    this.$nextTick(() => {
+      //this.isShowDetai=true;
+      this._initScroll();
+    });
+},
+methods:{
+	isShowDetaiFunction(){
+        if(this.$route.name == 'detail'){
+          this.isShowDetai=false;
+        }else{
+        	this.isShowDetai=true;//解决回退没有tab
+        }
+    }
+},
+watch: {
+    // 如果路由有变化，会再次执行该方法
+    "$route": "isShowDetaiFunction"
+}
+
+将a的:href跳转链接删除，改为click事件，问题完美解决
+《a v-if="item.imgnum" v-on:click="toLink(item.id)"》
+toLink(id){
+   //'detail/'+redian.fid+'/'+item.id
+   console.log(232);
+   this.$router.push({name:'detail',params:{fid:this.redian.fid,id:id}});
+}
+</pre>
+4、获取
